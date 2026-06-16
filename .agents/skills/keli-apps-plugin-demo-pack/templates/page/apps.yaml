@@ -1,0 +1,13 @@
+name: __NAME__
+title: __TITLE__
+type: plugin
+version: 1.0.0
+route: /x/__NAME__
+entry: dist
+author: __AUTHOR__
+description: __DESCRIPTION__
+plugin:
+  kind: page
+  mount: menu
+  icon: 🧩
+  category: plugins

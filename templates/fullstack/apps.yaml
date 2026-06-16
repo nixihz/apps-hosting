@@ -1,0 +1,21 @@
+name: my-fullstack-app
+title: 我的全栈应用
+title_i18n:
+  zh: 我的全栈应用
+  en: My Fullstack App
+type: fullstack
+version: 1.0.0
+route: /x/my-fullstack-app
+description: 一个全栈应用模板。
+description_i18n:
+  zh: 一个全栈应用模板。
+  en: A fullstack app template.
+frontend:
+  entry: web/dist
+backend:
+  command: node server/index.js
+  port: 3000
+  health: /health
+env:
+  - DATABASE_URL
+  - JWT_SECRET

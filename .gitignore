@@ -1,0 +1,14 @@
+node_modules/
+.apps/
+.apps-data/
+.apps-about-data/
+.pi/
+.agents/skills/deploy-production/
+.agents/skills/**/*.swp
+.DS_Store
+.env
+.env.*
+!.env.example
+coverage/
+dist/npm/
+*.log

@@ -1,0 +1,15 @@
+name: team-nav
+title: 团队导航页
+title_i18n:
+  zh: 团队导航页
+  en: Team Navigation
+type: frontend
+version: 1.0.0
+route: /x/team-nav
+entry: dist
+logo: assets/logo.svg
+author: infra-team
+description: 聚合团队常用系统链接，支持搜索和分类展示。
+description_i18n:
+  zh: 聚合团队常用系统链接，支持搜索和分类展示。
+  en: Collects frequently used team system links with search and categorized browsing.

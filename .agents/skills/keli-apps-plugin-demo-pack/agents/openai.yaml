@@ -1,0 +1,4 @@
+interface:
+  display_name: "Keli Apps Plugin Packager"
+  short_description: "Generate apps.yaml and package tasks"
+  default_prompt: "Use $keli-apps-plugin-demo-pack to prepare apps.yaml and Taskfile.yml packaging tasks for this Keli Apps plugin."

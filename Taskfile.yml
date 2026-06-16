@@ -1,0 +1,25 @@
+version: '3'
+
+tasks:
+  test:
+    cmds:
+      - npm test
+  package:cli:
+    desc: 打包可通过 HTTPS 安装的 keli-cli tarball
+    cmds:
+      - npm run package:cli
+  demo:install:
+    cmds:
+      - APPS_DATA_DIR=.apps-data node ./bin/apps.js install ./examples/team-nav
+  demo:serve:
+    cmds:
+      - APPS_DATA_DIR=.apps-data node ./src/server.js
+  demo:deploy:
+    cmds:
+      - APPS_DATA_DIR=.apps-data node ./bin/apps.js deploy ./examples/team-nav
+  demo:deployments:
+    cmds:
+      - APPS_DATA_DIR=.apps-data node ./bin/apps.js deployments team-nav
+  demo:reset:
+    cmds:
+      - rm -rf .apps-data

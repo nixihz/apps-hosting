@@ -1,0 +1,14 @@
+name: my-frontend-app
+title: 我的前端应用
+title_i18n:
+  zh: 我的前端应用
+  en: My Frontend App
+type: frontend
+version: 1.0.0
+route: /x/my-frontend-app
+entry: dist
+author: your-team
+description: 一个前端应用模板。
+description_i18n:
+  zh: 一个前端应用模板。
+  en: A frontend app template.

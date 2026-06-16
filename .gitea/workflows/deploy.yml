@@ -1,0 +1,85 @@
+name: Deploy Apps to Linux Server
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run tests
+        run: npm test
+
+      - name: Package CLI tarball
+        run: npm run package:cli
+
+      - name: Check deployment configuration
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+          DEPLOY_SERVICE: ${{ vars.DEPLOY_SERVICE }}
+          DEPLOY_HEALTH_URL: ${{ vars.DEPLOY_HEALTH_URL }}
+        run: |
+          test -n "$DEPLOY_HOST" || { echo "Missing secret: DEPLOY_HOST"; exit 1; }
+          test -n "$DEPLOY_PATH" || { echo "Missing variable: DEPLOY_PATH"; exit 1; }
+          test -n "$DEPLOY_SERVICE" || { echo "Missing variable: DEPLOY_SERVICE"; exit 1; }
+          test -n "$DEPLOY_HEALTH_URL" || { echo "Missing variable: DEPLOY_HEALTH_URL"; exit 1; }
+
+      - name: Setup SSH key
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          test -n "$SSH_KEY" || { echo "Missing secret: DEPLOY_SSH_KEY"; exit 1; }
+          test -n "$KNOWN_HOSTS" || { echo "Missing secret: DEPLOY_KNOWN_HOSTS"; exit 1; }
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_rsa
+          echo "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/id_rsa
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Sync code to server
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+        run: |
+          rsync -az --delete \
+            --exclude '.git' \
+            --exclude '.gitignore' \
+            --exclude '.apps-data' \
+            --exclude '.apps' \
+            --exclude '.pi' \
+            --exclude '.gitea' \
+            --exclude '.well-known' \
+            --exclude 'node_modules' \
+            --exclude 'docs' \
+            --exclude 'test' \
+            --exclude 'examples' \
+            ./ \
+            "$DEPLOY_HOST:$DEPLOY_PATH/"
+
+      - name: Install dependencies and restart service
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+          DEPLOY_SERVICE: ${{ vars.DEPLOY_SERVICE }}
+        run: |
+          ssh "$DEPLOY_HOST" "cd '$DEPLOY_PATH' && npm install --omit=dev --no-audit --prefer-offline && sudo systemctl restart '$DEPLOY_SERVICE'"
+
+      - name: Check service health
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_SERVICE: ${{ vars.DEPLOY_SERVICE }}
+          DEPLOY_HEALTH_URL: ${{ vars.DEPLOY_HEALTH_URL }}
+        run: |
+          sleep 3
+          ssh "$DEPLOY_HOST" "systemctl --no-pager --full status '$DEPLOY_SERVICE'"
+          ssh "$DEPLOY_HOST" "curl -fsS '$DEPLOY_HEALTH_URL' >/dev/null"

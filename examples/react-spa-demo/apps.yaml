@@ -1,0 +1,14 @@
+name: react-spa-demo
+title: React SPA 示例
+title_i18n:
+  zh: React SPA 示例
+  en: React SPA Demo
+type: frontend
+version: 1.0.0
+route: /x/react-spa-demo
+entry: dist
+author: platform-team
+description: 演示 React/Vite SPA 在 Keli Apps 子路径下的构建、安装和 fallback 路由。
+description_i18n:
+  zh: 演示 React/Vite SPA 在 Keli Apps 子路径下的构建、安装和 fallback 路由。
+  en: Demonstrates building and installing a React/Vite SPA under a Keli Apps subpath with fallback routing.

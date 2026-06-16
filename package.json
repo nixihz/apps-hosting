@@ -1,0 +1,37 @@
+{
+  "name": "keli-cli",
+  "version": "0.8.0",
+  "description": "Keli Apps：高端、现代、可插拔的轻应用运行时",
+  "type": "module",
+  "bin": {
+    "keli-cli": "./bin/keli-cli.js"
+  },
+  "files": [
+    "bin/keli-cli.js",
+    "src/",
+    "sdk/",
+    "templates/",
+    "README.md"
+  ],
+  "scripts": {
+    "start": "node ./src/server.js",
+    "dev": "APPS_DATA_DIR=.apps-data node ./src/server.js",
+    "test": "node --test",
+    "package:cli": "node ./scripts/package-cli.js",
+    "demo:install": "APPS_DATA_DIR=.apps-data node ./bin/apps.js install ./examples/team-nav",
+    "demo:serve": "APPS_DATA_DIR=.apps-data node ./src/server.js",
+    "demo:reset": "rm -rf .apps-data"
+  },
+  "keywords": [
+    "app-platform",
+    "plugin",
+    "static-hosting",
+    "process-manager"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

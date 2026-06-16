@@ -1,0 +1,15 @@
+name: __NAME__
+title: __TITLE__
+type: plugin
+version: 1.0.0
+route: /x/__NAME__
+description: __DESCRIPTION__
+plugin:
+  kind: api
+  category: plugins
+backend:
+  command: node server/index.js
+  port: 4301
+  health: /health
+runtime:
+  type: node
