@@ -9,7 +9,7 @@ Keli Apps is a lightweight app hosting runtime for small internal tools, static 
 - Plugin kinds: page, menu, API, webhook, and cron
 - Admin console for installed apps, health, logs, config, deployments, and rollback
 - Config center with env overrides, encrypted secrets, history, and audit logs
-- RBAC security model with users, groups, roles, API tokens, and 2FA/TOTP login
+- RBAC security model with users, groups, roles, API tokens, and a minimal TOTP gate for local/admin bootstrap
 - Platform APIs for OpenAPI, events, webhooks, policy reports, and backups
 - Node SDK, local CLI, plugin templates, and installable AI skill docs
 
@@ -39,7 +39,7 @@ Important variables:
 - `APPS_DATA_DIR`: runtime data directory, default `.apps`
 - `APPS_ENV`: optional environment namespace
 - `APPS_SECRET_KEY`: production encryption/session key material
-- `APPS_2FA_SECRET`: base32 TOTP secret for admin login
+- `APPS_2FA_SECRET`: base32 TOTP secret for the built-in local/admin bootstrap gate
 - `APPS_ADMIN_TOKEN`: optional global admin API token
 - `APPS_GOOGLE_ANALYTICS_ID`: optional GA ID; unset means no GA injection
 - `APPS_CLI_DOWNLOAD_DIR`: CLI tarball directory, default `dist/npm`
@@ -113,7 +113,11 @@ See [docs/apps-yaml.md](docs/apps-yaml.md) for the full manifest reference.
 
 ## Security
 
-Admin pages require `platform:admin`. The login page accepts 2FA/TOTP codes and writes an admin cookie session. Automation can use issued `ymj_` API tokens with `Authorization: Bearer <token>`.
+Admin pages require `platform:admin`. The built-in login page only accepts a TOTP code and is intended as a minimal local/admin bootstrap gate, not as a complete production authentication system.
+
+For public or production deployments, implement real user authentication in front of or inside the platform. Recommended options include passkeys/WebAuthn, OIDC/SSO, or a trusted reverse-proxy identity layer. Do not expose the built-in TOTP-only flow as the sole admin login on the public internet; a single factor code is not a safe replacement for a complete login system with user identity, phishing resistance, session policy, recovery, and audit controls.
+
+Automation can use issued `ymj_` API tokens with `Authorization: Bearer <token>` after access has been properly protected.
 
 Security APIs:
 
